@@ -1,0 +1,6 @@
+matplotlib
+numpy
+Pillow
+PyWavelets
+scikit-image
+scipy

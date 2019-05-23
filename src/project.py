@@ -69,10 +69,10 @@ def create_bg2_mask(image):
     return mask
 
 
-images = glob.glob(os.path.join('../assets/project/SRF', '*.png'))
+images = glob.glob(os.path.join('../assets/SRF', '*.png'))
 test_set = [
-    '../assets/project/SRF/input_2515_1.png'
-    , '../assets/project/SRF/input_2656_1.png'
+    '../assets/SRF/input_2515_1.png'
+    , '../assets/SRF/input_2656_1.png'
 ]
 #for i, path in enumerate(images):
 for i, path in enumerate(test_set):
