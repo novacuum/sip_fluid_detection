@@ -4,3 +4,5 @@ Pillow
 PyWavelets
 scikit-image
 scipy
+networkx
+oct2py

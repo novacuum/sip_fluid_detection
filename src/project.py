@@ -10,7 +10,7 @@ from skimage.filters import threshold_otsu, threshold_yen, threshold_adaptive
 from skimage.measure import find_contours
 from skimage.io import imread
 from skimage.morphology import erosion
-from skimage.restoration import denoise_wavelet, denoise_tv_chambolle
+from skimage.restoration import denoise_wavelet, denoise_tv_chambolle, denoise_bilateral
 
 
 def create_bg1_mask(image):
@@ -38,6 +38,7 @@ def create_bg1_mask(image):
 def crop_to_mask(image, mask):
     mask_pil = Image.fromarray(mask).convert('L')
     bg = Image.new(mask_pil.mode, mask_pil.size, mask_pil.getpixel((0, 0)))
+    denoise_bilateral()
     diff = ImageChops.difference(mask_pil, bg)
     bbox = diff.getbbox()
     image = numpy.copy(image)
