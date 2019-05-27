@@ -53,22 +53,22 @@ def crop_to_mask(image, mask):
     diff = ImageChops.difference(mask_pil, bg)
     bbox = diff.getbbox()
     image = numpy.copy(image)
-    image[mask == 0] = 1
+    image[mask == 0] = 0
     image_pil = Image.fromarray(image)
     return numpy.array(image_pil.crop(bbox)), bbox
 
-def first_notmask(x, mask, bbox, image_cropped):
-    value = image_cropped.shape[0]
+def last_notmask(x, mask, bbox, image_cropped):
+    value = 0
     for i in range(image_cropped.shape[0]-1, 0, -1):
        if (mask[i+bbox[1], x+bbox[0]]==1):
-           value = i
+           return i
     return value
 
-def last_notmask(x, mask, bbox, image_cropped):
+def first_notmask(x, mask, bbox, image_cropped):
     value = image_cropped.shape[0]
     for i in range(0, image_cropped.shape[0]):
        if (mask[i+bbox[1], x+bbox[0]]==1):
-           value = i
+           return i
     return value
 
 def fit_line(points):
@@ -159,6 +159,12 @@ def ransac(x, first_notmask_x, image_cropped):
         plotted = True
     return plotted
 
+def is_dark(x,y, shape):
+    x = int(x)
+    y = int(y)
+    xR = (max(0, x-2), min(shape[1]))
+    
+
 def srf_detector(image):
     if_detected = False
     mask = create_bg1_mask(image)
@@ -173,6 +179,9 @@ def srf_detector(image):
     
     if plotted:
         result = 'No SRF detected'
+        fig, ax = plt.subplots(1, 1, figsize=(9, 3), sharex=True, sharey=True)
+        ax.set_title('Cropped Image')
+        ax.imshow(image_cropped, cmap=plt.cm.gray, interpolation='nearest') 
 
     if plotted == False: 
         x_tot, y_tot = image_cropped.shape[0], image_cropped.shape[1]
@@ -186,11 +195,11 @@ def srf_detector(image):
             ax.set_title('Detected SRF in red')
             ax.imshow(image_cropped, cmap=plt.cm.gray, interpolation='nearest')
             y, x, r = blob
-            #c = plt.Circle((x, y), r, color='blue', linewidth=2, fill=False)
-            #ax.add_patch(c)
+            c = plt.Circle((x, y), r, color='blue', linewidth=2, fill=False)
+            ax.add_patch(c)
             p = True
             f_x = first_notmask(int(x), mask, bbox, image_cropped)
-            if (r >1) and (r <20) and (x > 30) and (x < y_tot-30) and (y > 50) and (y < x_tot -50) and image_cropped[int(y), int(x)]<0.2 and (y > f_x + (1/4)*(image_cropped.shape[0]-x)):
+            if (r >1) and (r <20) and (x > 30) and (x < y_tot-30) and (y > 50) and (y < x_tot -50) and is_dark(x,y)image_cropped[int(y), int(x)]<0.2 and (y > f_x + (1/4)*(image_cropped.shape[0]-x)):
                 for i in range(-int(r)-3, int(r)+1+3):
                     for j in range(-int(r)-3, int(r)+1+3):
                         if (mask[int(y)+bbox[1]+i, int(x)+bbox[0]+j]==0):
