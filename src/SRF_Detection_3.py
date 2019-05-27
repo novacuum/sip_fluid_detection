@@ -159,10 +159,12 @@ def ransac(x, first_notmask_x, image_cropped):
         plotted = True
     return plotted
 
-def is_dark(x,y, shape):
+
+def is_dark(image_cropped, x,y):
+    shape = image_cropped.shape
     x = int(x)
     y = int(y)
-    xR = (max(0, x-2), min(shape[1]))
+    return numpy.mean(image_cropped[max(0, y-2):min(shape[0], y+2), max(0, x-2):min(shape[1], x+2)]) < 0.2
     
 
 def srf_detector(image):
@@ -199,7 +201,7 @@ def srf_detector(image):
             ax.add_patch(c)
             p = True
             f_x = first_notmask(int(x), mask, bbox, image_cropped)
-            if (r >1) and (r <20) and (x > 30) and (x < y_tot-30) and (y > 50) and (y < x_tot -50) and is_dark(x,y)image_cropped[int(y), int(x)]<0.2 and (y > f_x + (1/4)*(image_cropped.shape[0]-x)):
+            if (r >1) and (r <20) and (x > 30) and (x < y_tot-30) and (y > 50) and (y < x_tot -50) and is_dark(image_cropped, x,y) and (y > f_x + (1/4)*(image_cropped.shape[0]-x)):
                 for i in range(-int(r)-3, int(r)+1+3):
                     for j in range(-int(r)-3, int(r)+1+3):
                         if (mask[int(y)+bbox[1]+i, int(x)+bbox[0]+j]==0):
@@ -214,8 +216,8 @@ def srf_detector(image):
     return if_detected
 
 results = numpy.empty(())
-#images = glob.glob(os.path.join('./Train-Data/NoSRF', '*.png'))
-images = glob.glob(os.path.join('./handout', '*.png'))
+images = glob.glob(os.path.join('../assets/SRF', '*.png'))
+#images = glob.glob(os.path.join('./handout', '*.png'))
 results = numpy.empty((len(images), 2), dtype=object)
 i=0
 for path in images:
@@ -227,4 +229,5 @@ for path in images:
     results[i,:] = (os.path.basename(path), number)
     i +=1 
 
-numpy.savetxt('results.csv', results, fmt="%s,%i", delimiter=",")
+print(results)
+#numpy.savetxt('results.csv', results, fmt="%s,%i", delimiter=",")

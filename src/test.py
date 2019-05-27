@@ -55,18 +55,21 @@ test_set = [
 ]
 
 colors = cm.get_cmap('jet')
-#for i, path in enumerate(images):
-for i, path in enumerate(test_set):
+for i, path in enumerate(images):
+    #for i, path in enumerate(test_set):
     print(i, path)
     image = imread(path)
     mask = create_bg1_mask(image)
     image_cropped = crop_to_mask(image, mask)
 
-    retina_layers = octave.getRetinalLayers(rgb2gray(image_cropped))
-    plt.imshow(image_cropped, interpolation='nearest')
+    try:
+        retina_layers = octave.getRetinalLayers(rgb2gray(image_cropped))
+        plt.imshow(image_cropped, interpolation='nearest')
 
-    for index, retina_layer in enumerate(retina_layers[0]):
-        rangeX = retina_layer.pathY[0]
-        rangeY = retina_layer.pathX[0]
-        plt.plot(rangeX/.355, rangeY/.355, 'go--', linewidth=1, markersize=1, color=colors(index*10))
-    plt.show()
+        for index, retina_layer in enumerate(retina_layers[0]):
+            rangeX = retina_layer.pathY[0]
+            rangeY = retina_layer.pathX[0]
+            plt.plot(rangeX/.355, rangeY/.355, 'go--', linewidth=1, markersize=1, color=colors(index*10))
+        plt.show()
+    except:
+        print('failed')
