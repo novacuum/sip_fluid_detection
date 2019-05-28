@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+"""
+Try to integrate the caserel library written in "matlab"
+
+@author: grotti, hiller, parker
+"""
+
+
 import glob, os
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -47,6 +55,7 @@ def crop_to_mask(image, mask):
     image = numpy.copy(image)
     image_pil = Image.fromarray(image)
     return numpy.array(image_pil.crop(bbox))
+
 
 images = glob.glob(os.path.join('../assets/SRF', '*.png'))
 test_set = [
