@@ -154,10 +154,10 @@ def ransac(x, first_notmask_x, image_cropped):
     x_new = x
     y = model_m * x_new + model_c
     for i in range(image_cropped.shape[1]):
-        if (y[i] - first_notmask_x[i])<12:
+        if -10 <(y[i] - first_notmask_x[i])<12:
             num += 1
 
-    if num/ image_cropped.shape[1] > 0.52:
+    if num/ image_cropped.shape[1] > 0.65:
         #check if enough points close to line
         plotted = True
     return plotted
