@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu May 23 07:35:54 2019
+Our solution for the project «Fluid detection in OCT»
 
-@author: anyam
+@author: grotti, hiller, parker
 """
 
 import glob, os, numpy, sys
